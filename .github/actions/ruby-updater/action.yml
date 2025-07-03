@@ -128,7 +128,7 @@ runs:
       - Updated Dockerfile ruby version
       - Rebuilt Gemfile.lock dependencies (if Bundle Update failed)
 
-      Please review and test before merging.
+      Please review and test before merging."
 
       gh pr create \
         --title "Update Ruby to version ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" \
