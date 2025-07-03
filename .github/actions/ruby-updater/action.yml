@@ -111,7 +111,7 @@ runs:
       fi
       git add .
       git commit -m "Update Ruby to version ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}"
-      git push origin ${{ steps.set-branch-name.outputs.BRANCH_NAME }}
+      git push -u origin ${{ steps.set-branch-name.outputs.BRANCH_NAME }}
 
   - name: Create Pull Request
     if: steps.check_changes.outputs.has_changes == 'true'
