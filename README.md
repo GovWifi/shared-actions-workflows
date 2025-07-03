@@ -1,7 +1,7 @@
-# Reusable Workflows
-A collection of workflows used throughout GovWifi so instead of maintaining 10 separate instances of code, we can reuse and maintain just the one copy.
+# A collection of reusable Github Actions and Workflows
+A collection of reusable Github Actions and workflows used throughout GovWifi, so instead of maintaining 10 separate instances of code, we can reuse and maintain just the one copy.
 
-## Ruby Updater
+## Ruby Updater Action
 This workflow is designed to speed up the process of updating Ruby in our Docker containers.
 It does this by trying to update the .ruby-version Dockerfile and GemfileLock, if this fails, it will remove the gemfile lock and recreate it.
 We have about 10 repos that need constant updating, while this isn't 100% fool proof, it will fail if there are incompatibilities, it will at least help with the most common and easy updates.
@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
       - name: run updater
-        uses: govwifi/govwifi-actions/.github/actions/ruby-updater@main
+        uses: govwifi/govwifi-actions-workflows/.github/actions/ruby-updater@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
