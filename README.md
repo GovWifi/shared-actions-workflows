@@ -25,8 +25,10 @@ jobs:
   upgrade-ruby:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: govwifi/.github/workflow/update-ruby
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: run updater
+        uses: govwifi/govwifi-actions/.github/actions/ruby-updater@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
