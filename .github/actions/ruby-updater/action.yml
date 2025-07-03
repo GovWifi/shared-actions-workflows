@@ -123,11 +123,9 @@ runs:
       - Updated .ruby-version file
       - Updated Gemfile ruby version
       - Updated Dockerfile ruby version
-      - Rebuilt Gemfile.lock dependencies
+      - Rebuilt Gemfile.lock dependencies (if Bundle Update failed)
 
       Please review and test before merging.
-
-      Powered by [Ruby Upgrade Action](https://github.com/andrew/ruby-upgrade-action/)"
 
       gh pr create \
         --title "Update Ruby to version ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" \
@@ -136,10 +134,3 @@ runs:
         --head ${{ steps.set-branch-name.outputs.BRANCH_NAME }}
     env:
       GH_TOKEN: ${{ inputs.github-token }}
-      #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #    steps:
-      #      - uses: actions/checkout@v4
-      #      - uses: andrew/ruby-upgrade-action@main
-      #        with:
-      #          github-token: ${{ secrets.GITHUB_TOKEN }}
