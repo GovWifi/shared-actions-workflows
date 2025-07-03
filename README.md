@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
       - name: run updater
-        uses: govwifi/govwifi-actions-workflows/.github/actions/ruby-updater@main
+        uses: govwifi/shared-actions-workflows/.github/actions/ruby-updater@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```

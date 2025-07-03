@@ -75,6 +75,8 @@ runs:
     id: bundle-update
     shell: bash
     run: |
+      gem install bundler
+      bundle install
       bundle update --ruby
       echo "Updated Gemfile and dependencies"
     continue-on-error: true
@@ -87,6 +89,7 @@ runs:
       echo "Remove and rebuild lock file."
       rm Gemfile.lock
       echo "Gemfile.lock removed"
+      gem install bundler
       bundle install
       echo "Reinstalled Gems and dependencies"
 
@@ -123,11 +126,9 @@ runs:
       - Updated .ruby-version file
       - Updated Gemfile ruby version
       - Updated Dockerfile ruby version
-      - Rebuilt Gemfile.lock dependencies
+      - Rebuilt Gemfile.lock dependencies (if Bundle Update failed)
 
       Please review and test before merging.
-
-      Powered by [Ruby Upgrade Action](https://github.com/andrew/ruby-upgrade-action/)"
 
       gh pr create \
         --title "Update Ruby to version ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" \
@@ -136,10 +137,3 @@ runs:
         --head ${{ steps.set-branch-name.outputs.BRANCH_NAME }}
     env:
       GH_TOKEN: ${{ inputs.github-token }}
-      #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      #    steps:
-      #      - uses: actions/checkout@v4
-      #      - uses: andrew/ruby-upgrade-action@main
-      #        with:
-      #          github-token: ${{ secrets.GITHUB_TOKEN }}
