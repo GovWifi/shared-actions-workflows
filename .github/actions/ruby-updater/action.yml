@@ -75,6 +75,8 @@ runs:
     id: bundle-update
     shell: bash
     run: |
+      gem install bundler
+      bundle install
       bundle update --ruby
       echo "Updated Gemfile and dependencies"
     continue-on-error: true
@@ -87,6 +89,7 @@ runs:
       echo "Remove and rebuild lock file."
       rm Gemfile.lock
       echo "Gemfile.lock removed"
+      gem install bundler
       bundle install
       echo "Reinstalled Gems and dependencies"
 
