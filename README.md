@@ -32,3 +32,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
+## Checks not run.
+PR's created by github tokens will not run further workflows, this is a design decision taken by Github.
+See [Triggering Workflows](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs)
+Workarounds include [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token), [SSH](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#push-using-ssh-deploy-keys) [Machine Account](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#push-pull-request-branches-to-a-fork) or [GitHub App](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)
+At this stage these haven't been implemented by this action, we will need to make a decision on which direction to go if we want to do this
