@@ -127,6 +127,7 @@ runs:
       - Updated Gemfile ruby version
       - Updated Dockerfile ruby version
       - Rebuilt Gemfile.lock dependencies (if Bundle Update failed)
+      - To run tests, close and then reopen the PR.
 
       Please review and test before merging."
 
