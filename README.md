@@ -37,3 +37,8 @@ PR's created by github tokens will not run further workflows, this is a design d
 See [Triggering Workflows](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs)
 Workarounds include [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token), [SSH](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#push-using-ssh-deploy-keys) [Machine Account](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#push-pull-request-branches-to-a-fork) or [GitHub App](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)
 At this stage these haven't been implemented by this action, we will need to make a decision on which direction to go if we want to do this
+
+
+## Publish Artifact Workflow.
+This workflow will version, release and publish an artifact onto github to be used in a calling resource, see [Shared Frontend](https://github.com/GovWifi/govwifi-shared-frontend), at this time this shared version hasn't been implemented, but here as an example of how a shared workflow could be used.
+As this is an example, it's untested, no warranty it given or implied as to if it works.
