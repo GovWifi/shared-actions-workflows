@@ -6,14 +6,14 @@ inputs:
     description: 'GitHub token for creating pull requests'
     required: true
     default: ${{ github.token }}
+  main-branch:
+    description: 'The name of the main branch, while we slowly migrate from using master to main, default master'
+    required: false
+    default: 'master'
 
 runs:
   using: composite
   steps:
-  # - name: Setup User Env
-  #   run: |
-  #       git config user.name "${{ github.actor }}"
-  #       git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
   - name: Check out code
     uses: actions/checkout@v4
@@ -127,14 +127,15 @@ runs:
       - Updated Gemfile ruby version
       - Updated Dockerfile ruby version
       - Rebuilt Gemfile.lock dependencies (if Bundle Update failed)
-      - To run tests, close and then reopen the PR.
+      - To run tests, convert the draft PR to an Open PR.
 
       Please review and test before merging."
 
       gh pr create \
+        --draft
         --title "Update Ruby to version ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" \
         --body "$PR_BODY" \
-        --base master \
+        --base ${{inputs.main-branch}} \
         --head ${{ steps.set-branch-name.outputs.BRANCH_NAME }}
     env:
       GH_TOKEN: ${{ inputs.github-token }}
