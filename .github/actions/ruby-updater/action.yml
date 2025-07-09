@@ -36,7 +36,7 @@ runs:
     run: |
       if grep -q "${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" ".ruby-version" ; then
         echo "Ruby Version Match, nothing to do, exit with success."
-        exit 1
+        exit 0
       else
         echo "Current version of Ruby: $(cat .ruby-version) is different from latest: ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }} continue to update."
       fi
