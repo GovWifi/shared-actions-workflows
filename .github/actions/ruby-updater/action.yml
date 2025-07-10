@@ -1,5 +1,5 @@
 name: "Check and update Ruby"
-description: "Checks and updates Ruby version"
+description: "Checks and updates Ruby version, if no updated detected it will exit with fail, as there is no clean way to exit a github action."
 
 inputs:
   github-token:
@@ -35,8 +35,8 @@ runs:
     shell: bash
     run: |
       if grep -q "${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" ".ruby-version" ; then
-        echo "Ruby Version Match, nothing to do, exit with success."
-        exit 0
+        echo "Ruby Version Match, nothing to do, exiting."
+        exit 1
       else
         echo "Current version of Ruby: $(cat .ruby-version) is different from latest: ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }} continue to update."
       fi
