@@ -10,6 +10,10 @@ inputs:
     description: 'The name of the main branch, while we slowly migrate from using master to main, default master'
     required: false
     default: 'master'
+  ruby-path:
+    description: 'The path/directory where the ruby version config files are located, default root'
+    required: false
+    default: '.'
 
 runs:
   using: composite
@@ -66,6 +70,10 @@ runs:
     uses: ruby/setup-ruby@v1
     with:
       ruby-version: ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}
+
+  - name: move to ruby path/directory
+    shell: bash
+    run: cd ${{inputs.ruby-path}}/
 
   - name: Update Ruby versions
     shell: bash

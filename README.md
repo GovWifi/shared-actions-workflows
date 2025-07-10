@@ -6,13 +6,14 @@ This action is designed to speed up the process of updating Ruby in our Docker c
 It does this by trying to update the .ruby-version Dockerfile and GemfileLock, if this fails, it will remove the gemfile lock and recreate it.
 We have about 10 repos that need constant updating, while this isn't 100% fool proof, it will fail if there are incompatibilities, it will at least help with the most common and easy updates.
 This will create a branch and draft PR to review, fix and or merge as required.
-It takes 2 parameters
-github-token: The github token (in secrets) that gives the bot permissions to create branch and PR's
-main-branch: the base branch name, as we are moving from `master` to `main` this will allow flexibility in the `base` branch name.
+It takes 3 parameters, 1 Required, 2 Optional
+github-token: (REQUIRED) The github token (in secrets) that gives the bot permissions to create branch and PR's
+main-branch: (OPTIONAL) The base branch name, as we are moving from `master` to `main` this will allow flexibility in the `base` branch name.
+ruby-path: (OPTIONAL) The path were the Ruby version cnofig files are located, defaults to root. (no leading or training /)
 
 use
 ```
-# .github/workflows/upgrade-ruby.yml
+# .github/workflows/ruby-updater.yml
 name: Upgrade Ruby
 
 on:
@@ -35,6 +36,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           main-branch: master
+          ruby-path: acceptance_tests
 ```
 ## Checks not run.
 PR's created by github tokens will not run further workflows, this is a design decision taken by Github.
