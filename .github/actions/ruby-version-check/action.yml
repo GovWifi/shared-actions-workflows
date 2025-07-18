@@ -1,0 +1,47 @@
+name: "Check Ruby version and setup branch"
+description: "Check Ruby Version and setup branch"
+
+outputs:
+  TARGET_RUBY_VERSION:
+    description: 'Ouput Ruby Version'
+    value: ${{steps.get-ruby-version.outputs.TARGET_RUBY_VERSION}}
+  NEW_RUBY:
+    description: 'If ruby version is updated from that which the reop uses.'
+    value: ${{steps.ruby-updated.outputs.NEW_RUBY}}
+  RUBY_PATHS:
+    description: "Paths found in this repo for ruby environments"
+    value: ${{steps.find-ruby-envs.outputs.RUBY_PATHS}}
+
+runs:
+  # Get the latest ruby version from the docker build held in github.
+  using: composite
+  steps:
+  - name: Determine target Ruby version
+    id: get-ruby-version
+    shell: bash
+    run: |
+      LATEST_RUBY=$(curl -s https://api.github.com/repos/ruby/ruby/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/' | tr '_' '.')
+      echo "TARGET_RUBY_VERSION=$LATEST_RUBY" >> $GITHUB_OUTPUT
+
+  # find all the ruby environments
+  - name: find ruby instances
+    shell: bash
+    id: find-ruby-envs
+    run: |
+      ## Create Path Array
+      readarray -t paths_array < <(find -type f -name ".ruby-version" -exec dirname {} \;)
+      echo "RUBY_PATHS=${paths_array[@]}" >> $GITHUB_OUTPUT
+      echo "first_path=${paths_array[0]}" >> $GITHUB_ENV
+
+  # get the first path from the paths array, set output variable to true if version different to that stored.
+  - name: Check if Ruby is updated
+    shell: bash
+    id: ruby-updated
+    run: |
+      if grep -q "${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}" "${{env.first_path}}/.ruby-version" ; then
+        echo "Ruby Version Match, nothing to do, exit with success."
+        echo "NEW_RUBY=false" >> $GITHUB_OUTPUT
+      else
+        echo "Current version of Ruby: $(cat .ruby-version) is different from latest: ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }} continue to update."
+        echo "NEW_RUBY=true" >> $GITHUB_OUTPUT
+      fi

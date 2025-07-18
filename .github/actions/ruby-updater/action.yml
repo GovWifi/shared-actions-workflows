@@ -10,6 +10,10 @@ inputs:
     description: 'The name of the main branch, while we slowly migrate from using master to main, default master'
     required: false
     default: 'master'
+  ruby-path:
+    description: 'The path/directory where the ruby version config files are located, default root'
+    required: false
+    default: '.'
 
 runs:
   using: composite
@@ -67,14 +71,19 @@ runs:
     with:
       ruby-version: ${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}
 
+  - name: move to ruby path/directory
+    shell: bash
+    run: cd ${{inputs.ruby-path}}/
+
   - name: Update Ruby versions
     shell: bash
     run: |
       sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ .ruby-version
-      cat .ruby-version
       echo "Updated .ruby-version file"
-      sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ Dockerfile
-      cat Dockerfile
+      ## update docker file if exists
+      if [ -e "Dockerfile" ]; then
+        sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ Dockerfile
+      fi
       echo "Updated DockerFile"
 
   - name: Attempt to run bundle update
