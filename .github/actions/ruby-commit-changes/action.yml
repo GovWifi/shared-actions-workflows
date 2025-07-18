@@ -15,13 +15,16 @@ runs:
   using: composite
   steps:
 
-  # commit and push the changes to the branch, again the PR can't access this workspace.
-  - name: Commit changes
+  - name: Setup User Env
     shell: bash
     run: |
       git config --local user.email "github-actions[bot]@users.noreply.github.com"
       git config --local user.name "github-actions[bot]"
 
+  # commit and push the changes to the branch, again the PR can't access this workspace.
+  - name: Commit changes
+    shell: bash
+    run: |
       git add .
       git commit -m "Update Ruby to version ${{ env.TARGET_RUBY_VERSION }}"
       git push origin ${{ env.COMMIT_BRANCH}}
