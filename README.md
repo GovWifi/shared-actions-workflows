@@ -117,6 +117,10 @@ jobs:
         main-branch: master
 ```
 
+## Known issues
+With both of the above scripts, to get the Ruby version a Curl to the github api is performed, sometimes this can fail due to network errors, hopefully running this at night might help, but if it does file, it stops the build.
+Maybe a future fix would be to add a retry method into it, a battle for another day!
+
 ## Checks not run
 PR's created by github tokens will not run further workflows, this is a design decision taken by Github.
 See [Triggering Workflows](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs)
