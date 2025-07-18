@@ -1,0 +1,56 @@
+name: "Commit changes and Raise PR"
+description: "Commit changes to branch and raise PR"
+
+inputs:
+  github-token:
+    description: 'GitHub token for creating pull requests'
+    required: true
+    default: ${{ github.token }}
+  main-branch:
+    description: 'The name of the main branch, while we slowly migrate from using master to main, default master'
+    required: false
+    default: 'master'
+
+runs:
+  using: composite
+  steps:
+
+  # commit and push the changes to the branch, again the PR can't access this workspace.
+  - name: Commit changes
+    shell: bash
+    run: |
+      git config --local user.email "github-actions[bot]@users.noreply.github.com"
+      git config --local user.name "github-actions[bot]"
+
+      git add .
+      git commit -m "Update Ruby to version ${{ env.TARGET_RUBY_VERSION }}"
+      git push origin ${{ env.COMMIT_BRANCH}}
+
+  # create a draft pull request, this is because, by a github design, workflows can not trigger
+  # other workflows, unless a PAT, SSH ect is used to trigger, which isn't done here, yet.
+  # So to trigger workflow, just push draft to ready.
+  - name: Create Pull Request
+    shell: bash
+    run: |
+      PR_BODY="This Draft PR updates the Ruby version to ${{ env.TARGET_RUBY_VERSION }}.
+
+      Changes made:
+      - Updated .ruby-version file
+      - Updated Gemfile ruby version
+      - Updated Dockerfile ruby version
+      - Rebuilt Gemfile.lock dependencies
+
+      This PR is opened as draft, convert to 'ready to review' if happy with changes
+      and this will then trigger the lint and tests, as workflows can't trigger other
+      workflows due to GitHubs imposed limitation,
+      Please review and test before merging."
+
+      gh pr create \
+        --title "Update Ruby to version ${{ env.TARGET_RUBY_VERSION }}" \
+        --body "$PR_BODY" \
+        --base ${{inputs.main-branch}} \
+        --head ${{ env.COMMIT_BRANCH }}\
+        --draft
+
+    env:
+      GH_TOKEN: ${{ inputs.github-token }}

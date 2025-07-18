@@ -79,10 +79,11 @@ runs:
     shell: bash
     run: |
       sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ .ruby-version
-      cat .ruby-version
       echo "Updated .ruby-version file"
-      sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ Dockerfile
-      cat Dockerfile
+      ## update docker file if exists
+      if [ -e "Dockerfile" ]; then
+        sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ steps.get-ruby-version.outputs.TARGET_RUBY_VERSION }}'/ Dockerfile
+      fi
       echo "Updated DockerFile"
 
   - name: Attempt to run bundle update
