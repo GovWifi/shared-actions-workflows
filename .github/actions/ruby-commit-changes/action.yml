@@ -18,8 +18,8 @@ runs:
   - name: Setup User Env
     shell: bash
     run: |
-      git config --local user.email "github-actions[bot]@users.noreply.github.com"
-      git config --local user.name "github-actions[bot]"
+      git config user.name "${{ github.actor }}"
+      git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
   # commit and push the changes to the branch, again the PR can't access this workspace.
   - name: Commit changes
@@ -35,7 +35,7 @@ runs:
   - name: Create Pull Request
     shell: bash
     run: |
-      PR_BODY="This Draft PR updates the Ruby version to ${{ env.TARGET_RUBY_VERSION }}.
+      PR_BODY="This PR updates the Ruby version to ${{ env.TARGET_RUBY_VERSION }}.
 
       Changes made:
       - Updated .ruby-version file
@@ -43,9 +43,8 @@ runs:
       - Updated Dockerfile ruby version
       - Rebuilt Gemfile.lock dependencies
 
-      This PR is opened as draft, convert to 'ready to review' if happy with changes
-      and this will then trigger the lint and tests, as workflows can't trigger other
-      workflows due to GitHubs imposed limitation,
+      Close and reopen this P Rto run the automatic checks, such as lint and test,
+      as workflows can't trigger other workflows due to GitHubs imposed limitation,
       Please review and test before merging."
 
       gh pr create \
@@ -53,7 +52,6 @@ runs:
         --body "$PR_BODY" \
         --base ${{inputs.main-branch}} \
         --head ${{ env.COMMIT_BRANCH }}\
-        --draft
 
     env:
       GH_TOKEN: ${{ inputs.github-token }}
