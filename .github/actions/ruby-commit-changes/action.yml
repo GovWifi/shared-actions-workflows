@@ -43,7 +43,7 @@ runs:
       - Updated Dockerfile ruby version
       - Rebuilt Gemfile.lock dependencies
 
-      Close and reopen this P Rto run the automatic checks, such as lint and test,
+      Close and reopen this PR to run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
       Please review and test before merging."
 
