@@ -40,8 +40,8 @@ runs:
       Changes made:
       - Updated .ruby-version file
       - Updated Gemfile ruby version
-      - Updated Dockerfile ruby version
-      - Rebuilt Gemfile.lock dependencies
+      - Updated Dockerfile ruby version (if found)
+      - Rebuild Gemfile.lock if required.
 
       Close and reopen this PR to run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
