@@ -48,7 +48,7 @@ runs:
       Please review and test before merging."
 
       gh pr create \
-        --title "Update Ruby to version ${{ env.TARGET_RUBY_VERSION }}" \
+        --title "chore(deps): Update Ruby version to ${{ env.TARGET_RUBY_VERSION }}" \
         --body "$PR_BODY" \
         --base ${{inputs.main-branch}} \
         --head ${{ env.COMMIT_BRANCH }}\
