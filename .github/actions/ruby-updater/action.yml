@@ -1,4 +1,4 @@
-name: "Check and update Ruby"
+name: "Deprecated, please use multi env version, see readme, Check and update Ruby"
 description: "Checks and updates Ruby version, if no updated detected it will exit with fail, as there is no clean way to exit a github action."
 
 inputs:
