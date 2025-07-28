@@ -21,8 +21,19 @@ runs:
       git config user.name "${{ github.actor }}"
       git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
+  - name: Check for changes
+    shell: bash
+    id: check_changes
+    run: |
+      if [[ -n "$(git status --porcelain)" ]]; then
+        echo "has_changes=true" >> $GITHUB_OUTPUT
+      else
+        echo "has_changes=false" >> $GITHUB_OUTPUT
+      fi
+
   # commit and push the changes to the branch, again the PR can't access this workspace.
   - name: Commit changes
+    if: steps.check_changes.outputs.has_changes == 'true'
     shell: bash
     run: |
       git add .
@@ -33,15 +44,15 @@ runs:
   # other workflows, unless a PAT, SSH ect is used to trigger, which isn't done here, yet.
   # So to trigger workflow, just push draft to ready.
   - name: Create Pull Request
+    if: steps.check_changes.outputs.has_changes == 'true'
     shell: bash
     run: |
       PR_BODY="This PR updates the Ruby version to ${{ env.TARGET_RUBY_VERSION }}.
 
       Changes made:
       - Updated .ruby-version file
-      - Updated Gemfile ruby version
       - Updated Dockerfile ruby version (if found)
-      - Rebuild Gemfile.lock if required.
+      - Update or Rebuild Gemfile.lock (if Bundle Update failed)
 
       Close and reopen this PR to run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
