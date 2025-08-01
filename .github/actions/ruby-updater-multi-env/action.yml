@@ -19,12 +19,12 @@ runs:
     shell: bash
     run: |
       ## convert path variable into array
-      ruby_paths='${{env.RUBY_PATHS}}'
-      paths_array=(${ruby_paths})
-      ## Check if any paths were found
-      if [ ${#paths_array[@]} -eq 0 ]; then
-        echo "No 'ruby-version' files found. Exiting."
-        exit 0
+      ruby_paths="${{env.RUBY_PATHS}}" ## read in env variable
+      paths_array="(${ruby_paths})" ## convert tring to array
+      ## check if root if included, add if not.
+      if [[ ! " ${paths_array[*]} " =~ [[:space:]]"./"[[:space:]] ]]; then
+        echo "doesn't contain root, so will add to catch lone Dockerfiles in root"
+        paths_array+=("./"")
       fi
       ## Loop paths
       for path in "${paths_array[@]}"; do
