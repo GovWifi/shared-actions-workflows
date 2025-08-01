@@ -44,7 +44,7 @@ runs:
 
         ## update docker file if exists
         if [ -e "Dockerfile" ]; then
-          sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ env.TARGET_RUBY_VERSION }}'/ Dockerfile
+          sed -i s/FROM ruby:[0-9.]*\(-.*\)\?/FROM ruby:${{ env.TARGET_RUBY_VERSION }}\1/" Dockerfile
         fi
 
         ## Update gemfile if exists
