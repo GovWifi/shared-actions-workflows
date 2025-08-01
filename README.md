@@ -24,7 +24,7 @@ name: Upgrade Ruby in multiple environments
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 15 * 0" # Runs monthly (in the middle to avoid any date clashes)
+    - cron: "0 0 15 * *" # Runs monthly (in the middle to avoid any date clashes)
 
 permissions:
   contents: write
@@ -81,6 +81,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           main-branch: master
+  labeler:
+    ## Auto Add labels to the PR
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v5
 
 ```
 
