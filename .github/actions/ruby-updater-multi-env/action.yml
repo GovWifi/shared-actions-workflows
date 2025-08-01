@@ -47,19 +47,21 @@ runs:
           sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ env.TARGET_RUBY_VERSION }}'/ Dockerfile
         fi
 
-        ## attempt to run bundle install
-        if ! bundle update --ruby; then
-          echo "!!! ERROR: bundle update FAILED in $path !!!"
-          echo "So have to brute force it"
-          echo "Remove and rebuild Gem lock file."
-          rm Gemfile.lock
-          echo "Gemfile.lock removed"
-          bundle install
-          echo "Reinstalled Gems and dependencies"
-        else
-          echo "Bundle update Successful!"
+        ## Update gemfile if exists
+        if [ -e "Gemfile" ]; then
+          ## attempt to run bundle install
+          if ! bundle update --ruby; then
+            echo "!!! ERROR: bundle update FAILED in $path !!!"
+            echo "So have to brute force it"
+            echo "Remove and rebuild Gem lock file."
+            rm Gemfile.lock
+            echo "Gemfile.lock removed"
+            bundle install
+            echo "Reinstalled Gems and dependencies"
+          else
+            echo "Bundle update Successful!"
+          fi
         fi
-
         # Pop back to the original directory
         popd > /dev/null
       done
