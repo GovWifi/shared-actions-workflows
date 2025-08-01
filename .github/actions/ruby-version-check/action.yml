@@ -31,7 +31,7 @@ runs:
       ## Create Path Array
       readarray -t paths_array < <(find -type f -name ".ruby-version" -exec dirname {} \;)
       ## convert array to text to enable output.
-      echo "RUBY_PATHS=${paths_array[@]}" >> $GITHUB_OUTPUT
+      echo "RUBY_PATHS=${paths_array[*]}" >> $GITHUB_OUTPUT
       ## use first occurrence of ruby version for version check.
       echo "first_path=${paths_array[0]}" >> $GITHUB_ENV
 

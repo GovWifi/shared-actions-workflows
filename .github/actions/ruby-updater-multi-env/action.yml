@@ -20,7 +20,7 @@ runs:
     run: |
       ## convert path variable into array
       ruby_paths="${{env.RUBY_PATHS}}" ## read in env variable
-      paths_array="(${ruby_paths})" ## convert tring to array
+      paths_array=(${ruby_paths}) ## convert tring to array
       ## check if root if included, add if not.
       if [[ ! " ${paths_array[*]} " =~ [[:space:]]"./"[[:space:]] ]]; then
         echo "doesn't contain root, so will add to catch lone Dockerfiles in root"
