@@ -81,11 +81,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           main-branch: master
-  labeler:
-    ## Auto Add labels to the PR
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/labeler@v5
+
 
 ```
 
