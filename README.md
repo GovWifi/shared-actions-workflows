@@ -24,7 +24,7 @@ name: Upgrade Ruby in multiple environments
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 15 * *" # Runs monthly (in the middle to avoid any date clashes)
+    - cron: "35 1 15 * *" # Runs monthly (in the middle to avoid any date clashes)
 
 permissions:
   contents: write
@@ -48,7 +48,7 @@ jobs:
 
       - name: Setup github branch for Ruby Updates
         id: setup-branch
-        if: ${{ steps.check-ruby.outputs.NEW_RUBY }} == 'true'
+        if: ${{ steps.check-ruby.outputs.NEW_RUBY == 'true' }}
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-setup-branch@main
         env:
           TARGET_RUBY_VERSION: ${{ steps.check-ruby.outputs.TARGET_RUBY_VERSION }}
@@ -67,7 +67,7 @@ jobs:
           NEW_RUBY: ${{ needs.check-ruby-setup.outputs.NEW_RUBY}}
           RUBY_PATHS: ${{ needs.check-ruby-setup.outputs.RUBY_PATHS}}
         ## Only update if the Ruby Version has changed.
-        if: ${{ env.NEW_RUBY }} == 'true'
+        if: ${{ env.NEW_RUBY == 'true' }}
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-updater-multi-env@main
 
       - name: Commit and Raise PR
@@ -77,7 +77,7 @@ jobs:
           NEW_RUBY: ${{ needs.check-ruby-setup.outputs.NEW_RUBY}}
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-commit-changes@main
         ## Only update if the Ruby Version has changed.
-        if: ${{ env.NEW_RUBY }} == 'true'
+        if: ${{ env.NEW_RUBY  == 'true' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           main-branch: master
