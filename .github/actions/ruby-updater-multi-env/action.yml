@@ -43,7 +43,7 @@ runs:
 
         ## update .ruby file
         if [ -e ".ruby-version" ]; then
-          sed -i "s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/$TARGET_VERSION/" .ruby-version
+          sed -i "s/[0-9]\.[0-9]\.[0-9]/$TARGET_VERSION/" .ruby-version
         fi
 
         ## update docker file if exists
