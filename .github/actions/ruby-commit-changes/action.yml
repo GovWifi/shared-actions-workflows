@@ -17,9 +17,12 @@ runs:
 
   - name: Setup User Env
     shell: bash
+    env:
+      ACTOR: ${{ github.actor }}
+      ACTOR_ID: ${{ github.actor_id }}
     run: |
-      git config user.name "${{ github.actor }}"
-      git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+      git config user.name "$ACTOR"
+      git config user.email "$ACTOR_ID+$ACTOR@users.noreply.github.com"
 
   - name: Check for changes
     shell: bash
@@ -35,10 +38,13 @@ runs:
   - name: Commit changes
     if: steps.check_changes.outputs.has_changes == 'true'
     shell: bash
+    env:
+      TARGET_VERSION: ${{ env.TARGET_RUBY_VERSION }}
+      COMMIT_BRANCH: ${{ env.COMMIT_BRANCH }}
     run: |
       git add .
-      git commit -m "Update Ruby to version ${{ env.TARGET_RUBY_VERSION }}"
-      git push origin ${{ env.COMMIT_BRANCH}}
+      git commit -m "Update Ruby to version $TARGET_VERSION"
+      git push origin "$COMMIT_BRANCH"
 
   # create a draft pull request, this is because, by a github design, workflows can not trigger
   # other workflows, unless a PAT, SSH ect is used to trigger, which isn't done here, yet.
@@ -46,9 +52,15 @@ runs:
   - name: Create Pull Request
     if: steps.check_changes.outputs.has_changes == 'true'
     shell: bash
-    run: |
-      PR_BODY="This PR updates the Ruby version to ${{ env.TARGET_RUBY_VERSION }}.
+    env:
+      GH_TOKEN: ${{ inputs.github-token }}
+      TARGET_VERSION: ${{ env.TARGET_RUBY_VERSION }}
+      MAIN_BRANCH: ${{ inputs.main-branch }}
+      COMMIT_BRANCH: ${{ env.COMMIT_BRANCH }}
 
+    run: |
+      PR_TITLE="chore(deps): Update Ruby version to $TARGET_VERSION"
+      PR_BODY="This PR updates the Ruby version to $TARGET_VERSION.
       Changes made:
       - Updated .ruby-version file
       - Updated Dockerfile ruby version (if found)
@@ -58,11 +70,9 @@ runs:
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
       Please review and test before merging."
 
-      gh pr create \
-        --title "chore(deps): Update Ruby version to ${{ env.TARGET_RUBY_VERSION }}" \
-        --body "$PR_BODY" \
-        --base ${{inputs.main-branch}} \
-        --head ${{ env.COMMIT_BRANCH }}\
 
-    env:
-      GH_TOKEN: ${{ inputs.github-token }}
+      gh pr create \
+        --title "$PR_TITLE" \
+        --body "$PR_BODY" \
+        --base "$MAIN_BRANCH"\
+        --head "$COMMIT_BRANCH"

@@ -12,9 +12,12 @@ runs:
   # use Ruby version to create the branch name send send to output.
   - name: set branch name
     id: set-branch-name
+    env:
+      TARGET_VERSION: ${{ env.TARGET_RUBY_VERSION }}
+
     shell: bash
     run: |
-      echo "COMMIT_BRANCH=update-to-ruby-${{ env.TARGET_RUBY_VERSION }}" >> $GITHUB_OUTPUT
+      echo "COMMIT_BRANCH=update-to-ruby-$TARGET_VERSION" >> $GITHUB_OUTPUT
 
   # Check if branch exists, if not, create it, also push it up as the
   # workspace can't be access from another job.

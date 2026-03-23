@@ -6,8 +6,10 @@ runs:
   steps:
   # Pull update from git, switch to branch
   - name: checkout update branch
+    env:
+      COMMIT_BRANCH: ${{ env.COMMIT_BRANCH }}
     shell: bash
-    run: git fetch && git switch ${{ env.COMMIT_BRANCH }}
+    run: git fetch && git switch $COMMIT_BRANCH
 
   - name: Set up Ruby
     uses: ruby/setup-ruby@v1
@@ -17,13 +19,15 @@ runs:
   # run the text replacements on the .ruby version and docker file.
   - name: Update Ruby versions
     shell: bash
+    env:
+      TARGET_VERSION: ${{ env.TARGET_RUBY_VERSION }}
+      RUBY_PATHS: ${{ steps.find-ruby-envs.outputs.RUBY_PATHS }}
     run: |
       ## convert path variable into array
-      ruby_paths="${{env.RUBY_PATHS}}" ## read in env variable
-      paths_array=(${ruby_paths}) ## convert tring to array
+      read -r -a paths_array <<< "$RUBY_PATHS"
       ## check if root if included, add if not.
       if [[ ! " ${paths_array[*]} " =~ [[:space:]]"."[[:space:]] ]]; then
-        echo "doesn't contain root, so will add to catch lone Dockerfiles in root"
+        echo "doesn't contain root, so will add to catch lone DockerFiles in root"
         paths_array+=(".")
       fi
       ## Loop paths
@@ -39,12 +43,12 @@ runs:
 
         ## update .ruby file
         if [ -e ".ruby-version" ]; then
-          sed -i s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/'${{ env.TARGET_RUBY_VERSION }}'/ .ruby-version
+          sed -i "s/\[0-9\]\\.\[0-9\]\\.\[0-9\]/$TARGET_VERSION/" .ruby-version
         fi
 
         ## update docker file if exists
         if [ -e "Dockerfile" ]; then
-          sed -i "s/FROM ruby:[0-9.]*\(-.*\)\?/FROM ruby:${{ env.TARGET_RUBY_VERSION }}\1/" Dockerfile
+          sed -i "s/FROM ruby:[0-9.]*\(-.*\)\?/FROM ruby:$TARGET_VERSION\1/" Dockerfile
         fi
 
         ## Update gemfile if exists
