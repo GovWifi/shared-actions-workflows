@@ -45,6 +45,8 @@ jobs:
       - name: Check Ruby Version
         id: check-ruby
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-version-check@main
+        with:
+          major-version: '4' ## << ADD THIS to move to version > 3, as currently defaulting to 3 due to some lib incompatibilities.
 
       - name: Setup github branch for Ruby Updates
         id: setup-branch
