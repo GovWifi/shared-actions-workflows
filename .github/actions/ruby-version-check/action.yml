@@ -2,7 +2,7 @@ name: "Check Ruby version and setup branch"
 description: "Check Ruby Version and setup branch"
 
 inputs:
-  MAJOR_VERSION:
+  major-version:
     description: 'The Ruby major version to track (e.g., "3" or "4") currently defaulting to 3, as 4 is not compatible wih some of our libraries, namely rubocop-goveuk, when your ready to update, just add 4 to the workflow inputs.'
     required: false
     default: '3'
