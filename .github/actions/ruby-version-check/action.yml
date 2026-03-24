@@ -1,6 +1,12 @@
 name: "Check Ruby version and setup branch"
 description: "Check Ruby Version and setup branch"
 
+inputs:
+  major-version:
+    description: 'The Ruby major version to track (e.g., "3" or "4") currently defaulting to 3, as 4 is not compatible wih some of our libraries, namely rubocop-goveuk, when your ready to update, just add 4 to the workflow inputs.'
+    required: false
+    default: '3'
+
 outputs:
   TARGET_RUBY_VERSION:
     description: 'Ouput Ruby Version'
@@ -19,8 +25,27 @@ runs:
   - name: Determine target Ruby version
     id: get-ruby-version
     shell: bash
+    env:
+      MAJOR_VERSION: ${{ inputs.major-version }}
     run: |
-      LATEST_RUBY=$(curl -s https://api.github.com/repos/ruby/ruby/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/' | tr '_' '.')
+      # 1. Simple Sanitization: Ensure MAJOR_VERSION is only a number
+      if [[ ! "$MAJOR_VERSION" =~ ^[0-9]+$ ]]; then
+        echo "!!! ERROR: Invalid major version '$MAJOR_VERSION'. Must be a number."
+        exit 1
+      fi
+      echo "Looking for the latest Ruby major version..."
+      # Curl to get latest version, using jq to filter out non released versions, getting the major version, passed in variable, then sorting, getting the last entry, removing the version prefix and converting dash to dot.
+      LATEST_RUBY=$(curl -s https://api.github.com/repos/ruby/ruby/releases |   jq -r --arg VERSION_PREFIX "v${MAJOR_VERSION}_"'
+        map(
+          select(
+            .draft == false and
+            .prerelease == false and
+            (.tag_name | startswith($VERSION_PREFIX))
+          )
+        )
+      | sort_by(.tag_name)
+      | last
+      | .tag_name' |   sed 's/^v//' | tr '_' '.')
       echo "TARGET_RUBY_VERSION=$LATEST_RUBY" >> $GITHUB_OUTPUT
 
   # find all the ruby environments
