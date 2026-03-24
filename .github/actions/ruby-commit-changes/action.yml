@@ -60,16 +60,21 @@ runs:
 
     run: |
       PR_TITLE="chore(deps): Update Ruby version to $TARGET_VERSION"
-      PR_BODY="This PR updates the Ruby version to $TARGET_VERSION.
+      PR_BODY="#Ruby Updater
+      This PR updates the Ruby version to $TARGET_VERSION.
       Changes made:
       - Updated .ruby-version file
       - Updated Dockerfile ruby version (if found)
       - Update or Rebuild Gemfile.lock (if Bundle Update failed)
 
-      Close and reopen this PR to run the automatic checks, such as lint and test,
+      ** IMPORTANT**: This PR doesn't run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
-      Please review and test before merging."
+      so you will need to **close and reopen** this PR to run the automatic checks,
 
+      Please review and test before merging.
+
+      For more information, including how to bump the major version, see the Ruby Updater documentation at [Ruby Updater Action](https://github.com/GovWifi/shared-actions-workflows?tab=readme-ov-file#ruby-updater-action-for-multi-environments)
+      "
 
       gh pr create \
         --title "$PR_TITLE" \
