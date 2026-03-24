@@ -97,14 +97,16 @@ jobs:
 ## Repos that use this.
 [Dev Docs:](https://github.com/GovWifi/govwifi-dev-docs/)
 [Product page:](https://github.com/GovWifi/govwifi-product-page/)
-[Smoke Tests:](https://github.com/GovWifi/govwifi-smoke-tests/)
+[Tech Docs:](https://github.com/GovWifi/govwifi-tech-docs)
+[FrontEnd:](https://github.com/GovWifi/govwifi-frontend/)
 [User Signup API:](https://github.com/GovWifi/govwifi-user-signup-api/)
 [Auth API:](https://github.com/GovWifi/govwifi-authentication-api/)
-[Admin:](https://github.com/GovWifi/govwifi-admin/)
-[Safe Restarter:](https://github.com/GovWifi/govwifi-safe-restarter/)
-[Acceptance Tests:](https://github.com/GovWifi/govwifi-acceptance-tests/pull/195)
-[FrontEnd:](https://github.com/GovWifi/govwifi-frontend/)
 [Logging API:](https://github.com/GovWifi/govwifi-logging-api/)
+[Admin:](https://github.com/GovWifi/govwifi-admin/)
+[Smoke Tests:](https://github.com/GovWifi/govwifi-smoke-tests/)
+[Acceptance Tests:](https://github.com/GovWifi/govwifi-acceptance-tests/pull/195)
+[Two Factor Auh](https://github.com/GovWifi/govwifi_two_factor_auth)
+[Safe Restarter:](https://github.com/GovWifi/govwifi-safe-restarter/)
 
 ## Known issues
 With the above script, to get the Ruby version a Curl to the github api is performed, sometimes this can fail due to network errors, hopefully running this at night might help, but if it does fail, it stops the build.
