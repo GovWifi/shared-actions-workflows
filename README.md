@@ -11,11 +11,12 @@ This will create a branch and PR to review, to run the lint and test workflows, 
 
 This workflow has several actions, check job will check the ruby version then search the repo to find all the ruby versions.
 This is then sent to the ruby updater job, which will loop through all the environments and update the versions.
-later the commit action, commits the changes and raises a PR, [more about that in the Checks not run section below](#Checks-not-run)
+Next is the commit action, commits the changes and raises a PR, [more about that in the Checks not run section below](#Checks-not-run)
 
-It takes 2 parameters, 1 Required, 1 Optional
-github-token: (REQUIRED) The github token (in secrets) that gives the bot permissions to create branch and PR's
-main-branch: (OPTIONAL) The base branch name, as we are moving from `master` to `main` this will allow flexibility in the `base` branch name.
+It takes 3 parameters, 1 Required, 2 Optional
+* major-version: (OPTIONAL) This sets the major version of Ruby to be tracked.
+* github-token: (REQUIRED) The github token (in secrets) that gives the bot permissions to create branch and PR's
+* main-branch: (OPTIONAL) The base branch name, as we are moving from `master` to `main` this will allow flexibility in the `base` branch name.
 
 # .github/workflows/ruby-updater.yml
 ```yaml
@@ -29,6 +30,12 @@ on:
 permissions:
   contents: write
   pull-requests: write
+
+env:
+  MAIN_BRANCH: 'main' ## Main Branch Number
+  MAJOR_VERSION: '3'  ## << ADD THIS to move to version > 3, as currently defaulting to 3 due to some lib incompatibilities.
+
+## Don't adjust anything beyond this point.
 
 jobs:
   check-ruby-setup:
@@ -46,7 +53,7 @@ jobs:
         id: check-ruby
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-version-check@main
         with:
-          major-version: '4' ## << ADD THIS to move to version > 3, as currently defaulting to 3 due to some lib incompatibilities.
+          major-version: $MAJOR_VERSION
 
       - name: Setup github branch for Ruby Updates
         id: setup-branch
@@ -82,7 +89,7 @@ jobs:
         if: ${{ env.NEW_RUBY  == 'true' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          main-branch: master
+          main-branch: $MAIN_BRANCH
 
 
 ```
