@@ -60,14 +60,14 @@ runs:
 
     run: |
       PR_TITLE="chore(deps): Update Ruby version to $TARGET_VERSION"
-      PR_BODY="#Ruby Updater
+      PR_BODY="# Ruby Updater
       This PR updates the Ruby version to $TARGET_VERSION.
       Changes made:
       - Updated .ruby-version file
       - Updated Dockerfile ruby version (if found)
       - Update or Rebuild Gemfile.lock (if Bundle Update failed)
 
-      ** IMPORTANT**: This PR doesn't run the automatic checks, such as lint and test,
+      **IMPORTANT**: This PR doesn't run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
       so you will need to **close and reopen** this PR to run the automatic checks,
 
