@@ -27,10 +27,6 @@ on:
   schedule:
     - cron: "35 1 15 * *" # Runs monthly (in the middle to avoid any date clashes)
 
-permissions:
-  contents: write
-  pull-requests: write
-
 env:
   MAIN_BRANCH: 'main' ## Main Branch Number
   MAJOR_VERSION: '3'  ## << ADD THIS to move to version > 3, as currently defaulting to 3 due to some lib incompatibilities.
@@ -40,6 +36,8 @@ env:
 jobs:
   check-ruby-setup:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     outputs:
       TARGET_RUBY_VERSION: ${{ steps.check-ruby.outputs.TARGET_RUBY_VERSION }}
       NEW_RUBY: ${{ steps.check-ruby.outputs.NEW_RUBY }}
@@ -53,7 +51,7 @@ jobs:
         id: check-ruby
         uses: govwifi/shared-actions-workflows/.github/actions/ruby-version-check@main
         with:
-          major-version: $MAJOR_VERSION
+          major-version: ${{ env.MAJOR_VERSION }}
 
       - name: Setup github branch for Ruby Updates
         id: setup-branch
@@ -64,6 +62,9 @@ jobs:
 
   upgrade-ruby:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     needs: [check-ruby-setup]
     steps:
       - name: Check out code
@@ -89,7 +90,7 @@ jobs:
         if: ${{ env.NEW_RUBY  == 'true' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          main-branch: $MAIN_BRANCH
+          main-branch: ${{ env.MAIN_BRANCH }}
 
 
 ```

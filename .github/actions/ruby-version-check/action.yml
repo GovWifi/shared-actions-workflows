@@ -33,19 +33,25 @@ runs:
         echo "!!! ERROR: Invalid major version '$MAJOR_VERSION'. Must be a number."
         exit 1
       fi
-      echo "Looking for the latest Ruby major version..."
+      echo "Looking for the latest Ruby major version, not easy as tags are inconsistent, could be dot or dash or underscore."
       # Curl to get latest version, using jq to filter out non released versions, getting the major version, passed in variable, then sorting, getting the last entry, removing the version prefix and converting dash to dot.
-      LATEST_RUBY=$(curl -s https://api.github.com/repos/ruby/ruby/releases |   jq -r --arg VERSION_PREFIX "v${MAJOR_VERSION}_" '
+      LATEST_RUBY=$(curl -s https://api.github.com/repos/ruby/ruby/releases | jq -r --arg MAJOR "$MAJOR_VERSION" '
         map(
           select(
             .draft == false and
             .prerelease == false and
-            (.tag_name | startswith($VERSION_PREFIX))
+            (.tag_name | test("^v" + $MAJOR + "[._]"))
           )
+          | .version = (.tag_name | sub("^v"; "") | gsub("_"; "."))
         )
-      | sort_by(.tag_name)
-      | last
-      | .tag_name' |   sed 's/^v//' | tr '_' '.')
+        | sort_by(.version | split(".") | map(tonumber))
+        | last
+        | .version')
+
+        if [[ "$LATEST_RUBY" == "null" || -z "$LATEST_RUBY" ]]; then
+          echo "!!! ERROR: No stable releases found for Ruby $MAJOR_VERSION.x"
+          exit 1
+        fi
       echo "TARGET_RUBY_VERSION=$LATEST_RUBY" >> $GITHUB_OUTPUT
 
   # find all the ruby environments
