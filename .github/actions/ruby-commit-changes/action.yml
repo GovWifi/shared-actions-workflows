@@ -69,7 +69,7 @@ runs:
 
       **IMPORTANT**: This PR doesn't run the automatic checks, such as lint and test,
       as workflows can't trigger other workflows due to GitHubs imposed limitation,
-      so you will need to **close and reopen** this PR to run the automatic checks,
+      Please click the **Approve workflow to run** button, to allow these actions to run.
 
       Please review and test before merging.
 
